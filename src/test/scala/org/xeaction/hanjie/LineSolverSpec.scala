@@ -6,12 +6,12 @@ class LineSolverSpec extends WordSpec with Matchers {
   val ls = LineSolver(10)
   
   val invalid = List(
-      Line(List(11), Nil),
-      Line(List(5,5), Nil)
+      Line(11),
+      Line(5,5)
     )
   val validSingle = List(
-      Line(List(5,4), Nil),
-      Line(List(10), Nil)
+      Line(5,4),
+      Line(10)
     )
     
   def isValidCombination(combination: Seq[Boolean]) {
@@ -19,15 +19,12 @@ class LineSolverSpec extends WordSpec with Matchers {
   }
   
   "LineSolver" when {
-    
     "creating combinations" should {
-      
       "return List() if combination is invalid" in {
         invalid foreach {
           ls.combinations(_) should be (List())
         }
       }
-      
       "return 1 result for valid complete line" in {
         validSingle foreach { line =>
           val combinations = ls.combinations(line)

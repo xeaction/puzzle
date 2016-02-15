@@ -14,7 +14,7 @@ class LineSolver(cellCount: Int) {
   }
   
   def combinations(line: Line): Seq[Seq[Boolean]] = {
-    val filteredCombinations = combinationRecur(line.numbers, cellCount, 0).filterNot(_ == None).map(_.get)
+    val filteredCombinations = combinationRecur(line.numbers.toList, cellCount, 0).filterNot(_ == None).map(_.get)
     filteredCombinations
   }
   
