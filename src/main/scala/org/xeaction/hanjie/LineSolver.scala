@@ -1,20 +1,35 @@
 package org.xeaction.hanjie
 
 import scala.annotation.tailrec
+import scala.collection._
 
-class LineSolver(cellCount: Int) {
-  def solve(line: Line) = {
-    // check numbers don't add up to more than cell count
-    val numberSum = line.numbers.sum + line.numbers.length - 1
-    if (numberSum > cellCount) {
-      throw new IllegalStateException("Numbers are longer than number of cells")
-    }
-    
-    
+class LineSolver(line: Line, cellCount: Int) {
+  // check numbers don't add up to more than cell count
+  val numberSum = line.numbers.sum + line.numbers.length - 1
+  if (numberSum > cellCount) {
+    throw new IllegalStateException("Numbers are longer than number of cells")
   }
   
-  def combinations(line: Line): Seq[Seq[Boolean]] = {
-    val filteredCombinations = combinationRecur(line.numbers.toList, cellCount, 0).filterNot(_ == None).map(_.get)
+  
+  def solve(cells: Seq[Cell]): Seq[Cell] = {
+    val vcs = validCombinations(cells)
+    (vcs.head.map(Option(_)) /: vcs) { (c, combination) =>
+      c zip combination map { case (c1, c2) =>
+        c1.filter(_ == c2)
+      }
+    }.map(Cell(_))
+  }
+
+  def validCombinations(cells: Seq[Cell]) = combinations.filter(isValidCombination(cells, _))
+  
+  def isValidCombination(cells: Seq[Cell], combination: Seq[Boolean]): Boolean = {
+    cells zip combination forall { case (cell, result) =>
+      cell.value.map(_ == result).getOrElse(true)
+    }
+  }
+  
+  lazy val combinations: Seq[Seq[Boolean]] = {
+    val filteredCombinations = combinationRecur(line.numbers, cellCount, 0).filterNot(_ == None).map(_.get)
     filteredCombinations
   }
   
@@ -39,5 +54,5 @@ class LineSolver(cellCount: Int) {
 }
 
 object LineSolver {
-  def apply(cellCount: Int) = new LineSolver(cellCount)
+  def apply(line: Line, cellCount: Int) = new LineSolver(line, cellCount)
 }

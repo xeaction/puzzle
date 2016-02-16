@@ -2,9 +2,15 @@
 
 package org.xeaction.hanjie
 
-case class Cell(value: Option[Boolean], column: Line, row: Line)
+case class Cell(value: Option[Boolean])
 
-case class Line(numbers: Int*)
+class Line(val numbers: Seq[Int])
+
+object Line {
+  def apply(numbers: Int*) = new Line(numbers.toList)
+}
+
+case class LineSolution(line: Line)
 
 case class Grid(cols: Seq[Line], rows: Seq[Line], cells: Seq[Cell])
 
